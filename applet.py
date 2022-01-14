@@ -5,7 +5,7 @@ import requests
 
 
 def main():
-    color_hex = getNearestTaskStatus.main().web
+    color_hex = getNearestTaskStatus.main().hex_l
     signal = {
         'zoneId': 'KEY_K',
         'color': color_hex,
