@@ -1,5 +1,6 @@
 from config import PERSONAL_ACCESS_TOKEN, PROJECT_GID, WORKSPACE_GID, AP, RK
 import asana
+from datetime import datetime, date
 
 
 def get_tasks(client):
@@ -30,10 +31,20 @@ def filter_tasks_by_project(tasks, project_gid=PROJECT_GID):
     return filter(lambda task: part_of_project(task, project_gid), tasks)
 
 
+def filter_tasks_by_date_proximity(tasks, days_within):
+    def proximal(task, days_within):
+        due_date = datetime.strptime(task['due_on'], "%Y-%m-%d").date()
+        today = date.today()
+        return (due_date - today).days <= days_within
+
+    return filter(lambda task: proximal(task, days_within), tasks)
+
+
 def main():
     client = asana.Client.access_token(PERSONAL_ACCESS_TOKEN)
     tasks = get_tasks_by_user(client, AP.gid)
     tasks = filter_tasks_by_project(tasks)
+    tasks = filter_tasks_by_date_proximity(tasks, days_within=2)
     for task in tasks:
         print(task)
 
