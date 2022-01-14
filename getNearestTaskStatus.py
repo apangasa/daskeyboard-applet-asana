@@ -1,6 +1,10 @@
 from config import PERSONAL_ACCESS_TOKEN, PROJECT_GID, WORKSPACE_GID, AP, RK
 import asana
 from datetime import datetime, date
+from colour import Color
+
+URGENT_COLOR = Color('red')
+ON_TRACK_COLOR = Color('green')
 
 
 def get_tasks(client):
@@ -52,13 +56,27 @@ def get_days_to_nearest_task(tasks):
     return nearest_proximity
 
 
+def get_color_range(color_1, color_2, range_size=6):
+    return list(color_1.range_to(color_2, range_size))
+
+
+def get_status_color(color_range, proximity):
+    idx = proximity + 3  # 3 days overdue -> worst case
+    # ensure index is within list indices range
+    idx = min(max(idx, 0), len(color_range) - 1)
+
+    return color_range[proximity]
+
+
 def main():
+    color_range = get_color_range(URGENT_COLOR, ON_TRACK_COLOR)
+
     client = asana.Client.access_token(PERSONAL_ACCESS_TOKEN)
     tasks = get_tasks_by_user(client, AP.gid)
     tasks = filter_tasks_by_project(tasks)
-    x = get_days_to_nearest_task(tasks)
+    proximity = get_days_to_nearest_task(tasks)
 
-    print(x)
+    print(get_status_color(color_range, proximity))
 
 
 if __name__ == '__main__':
