@@ -75,8 +75,7 @@ def main():
     tasks = get_tasks_by_user(client, AP.gid)
     tasks = filter_tasks_by_project(tasks)
     proximity = get_days_to_nearest_task(tasks)
-
-    print(get_status_color(color_range, proximity))
+    return get_status_color(color_range, proximity)
 
 
 if __name__ == '__main__':
