@@ -32,21 +32,33 @@ def filter_tasks_by_project(tasks, project_gid=PROJECT_GID):
 
 
 def filter_tasks_by_date_proximity(tasks, days_within):
+    today = date.today()
+
     def proximal(task, days_within):
         due_date = datetime.strptime(task['due_on'], "%Y-%m-%d").date()
-        today = date.today()
         return (due_date - today).days <= days_within
 
     return filter(lambda task: proximal(task, days_within), tasks)
+
+
+def get_days_to_nearest_task(tasks):
+    nearest_proximity = None
+    today = date.today()
+    for task in tasks:
+        due_date = datetime.strptime(task['due_on'], "%Y-%m-%d").date()
+        proximity = (due_date - today).days
+        nearest_proximity = min(
+            proximity, nearest_proximity) if nearest_proximity else proximity
+    return nearest_proximity
 
 
 def main():
     client = asana.Client.access_token(PERSONAL_ACCESS_TOKEN)
     tasks = get_tasks_by_user(client, AP.gid)
     tasks = filter_tasks_by_project(tasks)
-    tasks = filter_tasks_by_date_proximity(tasks, days_within=2)
-    for task in tasks:
-        print(task)
+    x = get_days_to_nearest_task(tasks)
+
+    print(x)
 
 
 if __name__ == '__main__':
