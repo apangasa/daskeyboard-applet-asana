@@ -61,7 +61,7 @@ def get_color_range(color_1, color_2, range_size=6):
 
 
 def get_status_color(color_range, proximity):
-    idx = proximity + 3  # 3 days overdue -> worst case
+    idx = proximity + 1  # 1 day overdue -> worst case
     # ensure index is within list indices range
     idx = min(max(idx, 0), len(color_range) - 1)
 
