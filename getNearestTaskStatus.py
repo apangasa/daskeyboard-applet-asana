@@ -52,7 +52,7 @@ def get_days_to_nearest_task(tasks):
         due_date = datetime.strptime(task['due_on'], "%Y-%m-%d").date()
         proximity = (due_date - today).days
         nearest_proximity = min(
-            proximity, nearest_proximity) if nearest_proximity else proximity
+            proximity, nearest_proximity) if nearest_proximity is not None else proximity
     return nearest_proximity
 
 
@@ -65,7 +65,7 @@ def get_status_color(color_range, proximity):
     # ensure index is within list indices range
     idx = min(max(idx, 0), len(color_range) - 1)
 
-    return color_range[proximity]
+    return color_range[idx]
 
 
 def main():
