@@ -1,4 +1,4 @@
-from config import BACKEND_URL, DASQ_HEADERS
+from config import DASQ_BACKEND_URL, DASQ_HEADERS, DASQ_SIGNALS_ROUTE
 import getNearestTaskStatus
 import json
 import requests
@@ -19,7 +19,7 @@ def main():
     signal = json.dumps(signal)
 
     response = requests.post(
-        BACKEND_URL + '/api/1.0/signals', data=signal, headers=DASQ_HEADERS)
+        DASQ_BACKEND_URL + DASQ_SIGNALS_ROUTE, data=signal, headers=DASQ_HEADERS)
 
     if response.ok:
         print('Success!')
