@@ -15,7 +15,7 @@ def main():
         'clientName': 'Python script',
         'message': '',
         'name': f'New task in {WORKSPACE_NAME}',
-        'isMuted': True
+        'isMuted': True  # do not notify when signal arrives
     }
 
     signal = json.dumps(signal)
