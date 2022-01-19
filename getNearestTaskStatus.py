@@ -22,6 +22,7 @@ def get_tasks_by_user(client, user_gid):
         'workspace': WORKSPACE_GID,
         'assignee': user_gid,
         'limit': 100,
+        'completed_since': 'now',
         'opt_fields': ['name', 'assignee', 'due_on', 'projects']
     }
 
@@ -49,6 +50,9 @@ def get_days_to_nearest_task(tasks):
     nearest_proximity = None
     today = date.today()
     for task in tasks:
+        if task['due_on'] is None:
+            continue
+
         due_date = datetime.strptime(task['due_on'], "%Y-%m-%d").date()
         proximity = (due_date - today).days
         nearest_proximity = min(
@@ -61,6 +65,9 @@ def get_color_range(color_1, color_2, range_size=6):
 
 
 def get_status_color(color_range, proximity):
+    if proximity is None:
+        return color_range[-1]
+
     idx = proximity + 1  # 1 day overdue -> worst case
     # ensure index is within list indices range
     idx = min(max(idx, 0), len(color_range) - 1)
